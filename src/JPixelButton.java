@@ -31,7 +31,7 @@ public class JPixelButton extends JButton implements FocusListener {
 
 	// We use this suck out what transparent would really be - doesn't like null
 	private static JButton transparentColorSuckerButton = new JButton();
-	{transparentColorSuckerButton.setBackground(null);}
+	static { transparentColorSuckerButton.setBackground(null); }
 	protected static Color TRANSPARENT = transparentColorSuckerButton.getBackground();
 	public static Color colors[] = {
 			TRANSPARENT, // transparent is a special case - java makes it look nice :)
@@ -45,9 +45,10 @@ public class JPixelButton extends JButton implements FocusListener {
 	public static Color WHITE = colors[15];	
 	
 
-	enum STATES { FOREGROUND, BACKGROUND };
-	enum PIXELTYPES { PIXEL, PREVIEW, COLOR, MASTERCOLOR };
-	
+	enum STATES { FOREGROUND, BACKGROUND }
+
+	enum PIXELTYPES { PIXEL, PREVIEW, COLOR, MASTERCOLOR }
+
 	public static final String PIXEL_PREFIX = "pixel-";
 	public static final String PREVIEW_PREFIX = "preview-";
 	public static final String COLOR_PREFIX = "color-";
@@ -64,19 +65,6 @@ public class JPixelButton extends JButton implements FocusListener {
 	private Border unselectedBorder = null;
 
 	private static STATES capturingMode = null;
-	
-	/** Creates a new instance of JPixelButton */
-	public JPixelButton(STATES state, Color color) {
-		setStateAndColor(state, color);
-		addFocusListener(this);
-		unselectedBorder = getBorder();
-		pixelType = null;
-	}
-
-	public JPixelButton(JPixelButton.STATES state, Color startColor, String name, Dimension dimension, int x, int y) {
-		this(state, startColor, name, x, y);
-		setDimensions(dimension);
-	}
 
 	public JPixelButton(JPixelButton.STATES state, Color startColor, String name, Dimension dimension) {
 		this(state, startColor, name, UNKNOWN_PIXEL, UNKNOWN_PIXEL);
@@ -91,7 +79,6 @@ public class JPixelButton extends JButton implements FocusListener {
 		this(state, startColor, name, x, y);
 		this.previewNum = previewNum;
 	}
-	
 	
 	public JPixelButton(JPixelButton.STATES state, Color startColor, String name, int x, int y) {
 		this.pixelX = x;
@@ -114,6 +101,9 @@ public class JPixelButton extends JButton implements FocusListener {
 		}
 		
 		setName(name);
+		// see: http://stackoverflow.com/questions/1065691/how-to-set-the-background-color-of-a-jbutton-on-the-mac-os
+		setOpaque(true);
+
 		setStateAndColor(state, startColor);
 		if (!name.startsWith(PREVIEW_PREFIX)) {
 			addFocusListener(this);
@@ -183,15 +173,16 @@ public class JPixelButton extends JButton implements FocusListener {
 	public void setStateAndColor(STATES state, Color color) {
 		this.state = state;
 		setColor(color);
-		
-		if ((graphiCV != null) && (pixelX != UNKNOWN_PIXEL) && (pixelY != UNKNOWN_PIXEL)) 
+
+		if ((graphiCV != null) && (pixelX != UNKNOWN_PIXEL) && (pixelY != UNKNOWN_PIXEL))
 			graphiCV.updateCombinedPreview(pixelX, pixelY);
 	}
 
 	public void setColor(Color newColor) {
 		setBackground(newColor);
 	}
-	
+
+	@Override
 	public void setBackground(Color newColor) {
 		super.setBackground(newColor);
 		if (isPixelButton() && (graphiCV != null))
