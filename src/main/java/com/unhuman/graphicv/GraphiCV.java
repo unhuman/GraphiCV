@@ -1,3 +1,5 @@
+package com.unhuman.graphicv;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -417,17 +419,17 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 		JPanel buttonRowManager = new JPanel();
 		buttonRowManager.setBorder(noBorder);
 		buttonRowManager.setLayout(new FlowLayout(FlowLayout.LEFT));		
-		buttonImage = getImageIcon("images/erase.gif");
+		buttonImage = getImageIcon("resource/images/erase.gif");
 		resetPixelsButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Reset"));
 		resetPixelsButton.setToolTipText("Reset Pixels");
 		resetPixelsButton.addActionListener(this);
 		buttonRowManager.add(resetPixelsButton);
-		buttonImage = getImageIcon("images/invertPixels.gif");
+		buttonImage = getImageIcon("resource/images/invertPixels.gif");
 		invertPixelsButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Invert Pixels"));
 		invertPixelsButton.setToolTipText("Invert Pixels");
 		invertPixelsButton.addActionListener(this);
 		buttonRowManager.add(invertPixelsButton);		
-		buttonImage = getImageIcon("images/invertColors.gif");
+		buttonImage = getImageIcon("resource/images/invertColors.gif");
 		invertColorsButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Invert Colors"));
 		invertColorsButton.setToolTipText("Invert Colors");
 		invertColorsButton.addActionListener(this);
@@ -441,22 +443,22 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 		buttonRowManager = new JPanel();
 		buttonRowManager.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonRowManager.setBorder(noBorder);
-		buttonImage = getImageIcon("images/left.gif");
+		buttonImage = getImageIcon("resource/images/left.gif");
 		leftButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("<-- Push Left"));
 		leftButton.setToolTipText("Push Left");
 		leftButton.addActionListener(this);
 		buttonRowManager.add(leftButton);
-		buttonImage = getImageIcon("images/right.gif");
+		buttonImage = getImageIcon("resource/images/right.gif");
 		rightButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Push Right -->"));
 		rightButton.setToolTipText("Push Right");
 		rightButton.addActionListener(this);
 		buttonRowManager.add(rightButton);		
-		buttonImage = getImageIcon("images/up.gif");
+		buttonImage = getImageIcon("resource/images/up.gif");
 		upButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Push Up"));
 		upButton.setToolTipText("Push Up");
 		upButton.addActionListener(this);
 		buttonRowManager.add(upButton);		
-		buttonImage = getImageIcon("images/down.gif");
+		buttonImage = getImageIcon("resource/images/down.gif");
 		downButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Push Down"));
 		downButton.setToolTipText("Push Down");
 		downButton.addActionListener(this);
@@ -470,22 +472,22 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 		buttonRowManager = new JPanel();
 		buttonRowManager.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonRowManager.setBorder(noBorder);
-		buttonImage = getImageIcon("images/mirror.gif");
+		buttonImage = getImageIcon("resource/images/mirror.gif");
 		mirrorButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("<-- Mirror -->"));
 		mirrorButton.setToolTipText("Mirror");
 		mirrorButton.addActionListener(this);
 		buttonRowManager.add(mirrorButton);		
-		buttonImage = getImageIcon("images/flip.gif");
+		buttonImage = getImageIcon("resource/images/flip.gif");
 		flipButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Flip"));
 		flipButton.setToolTipText("Flip");
 		flipButton.addActionListener(this);
 		buttonRowManager.add(flipButton);
-		buttonImage = getImageIcon("images/clock.gif");
+		buttonImage = getImageIcon("resource/images/clock.gif");
 		rotateClockButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("Rotate -->"));
 		rotateClockButton.setToolTipText("Rotate Clockwise");
 		rotateClockButton.addActionListener(this);
 		buttonRowManager.add(rotateClockButton);
-		buttonImage = getImageIcon("images/counter.gif");
+		buttonImage = getImageIcon("resource/images/counter.gif");
 		rotateCounterButton = ((buttonImage.getIconHeight()>0) ? new JButton(buttonImage) : new JButton("<-- Rotate"));
 		rotateCounterButton.setToolTipText("Rotate Counter-Clockwise");
 		rotateCounterButton.addActionListener(this);
@@ -1067,7 +1069,7 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 	protected void performColorSelection(JPixelButton button, int minimumColor) {
 		// obtain the color from the item selected as a default
 		Color colorChosen = button.getBackground();
-		ColorChooserDialog colorChooserDialog = new ColorChooserDialog(frame, colorChosen, minimumColor);
+		com.unhuman.graphicv.ColorChooserDialog colorChooserDialog = new com.unhuman.graphicv.ColorChooserDialog(frame, colorChosen, minimumColor);
 		int x = button.getLocationOnScreen().x;
 		int y = button.getLocationOnScreen().y;
 		// ensure the color chooser is shown nicely, relative to parent

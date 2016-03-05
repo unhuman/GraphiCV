@@ -17,7 +17,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>GraphiCV</mainClass>
+                            <mainClass>com.unhuman.graphicv.GraphiCV</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

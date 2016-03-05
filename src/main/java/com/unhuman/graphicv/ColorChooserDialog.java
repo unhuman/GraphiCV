@@ -1,4 +1,4 @@
-/*
+package com.unhuman.graphicv;/*
  * ColorChooserDialog.java
  *
  * Created on March 31, 2007, 3:46 PM

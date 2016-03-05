@@ -1,3 +1,5 @@
+package com.unhuman.graphicv;
+
 import java.awt.Color;
 
 public class StoredImageState {

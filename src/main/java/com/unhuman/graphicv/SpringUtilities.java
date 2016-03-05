@@ -1,4 +1,4 @@
-/* 
+package com.unhuman.graphicv;/*
  * http://java.sun.com/docs/books/tutorial/uiswing/layout/spring.html
  * http://java.sun.com/docs/books/tutorial/uiswing/layout/examples/SpringUtilities.java
  */
