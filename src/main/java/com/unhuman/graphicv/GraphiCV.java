@@ -1390,7 +1390,10 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 		
 		// reset / restore image from place
 		reset();
+
 		storedImageStates[lastSelectedDisplayLevel].updateDisplay(this);
+		// ensure hex string updated
+		calculateGraphics();
 	}
 	
 	// Output hex in several modes... cvMode = colecovision C format
