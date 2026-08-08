@@ -35,11 +35,15 @@ If you already have Java 17 or newer installed:
 
 ```sh
 mvn clean package
-java -jar target/GraphiCV-1.0.jar
 ```
 
-If you'd rather hand someone an application that does not require Java at all, see
-[Building a native application](#building-a-native-application).
+That gives you two ways to run it:
+
+```sh
+target/dist/GraphiCV/GraphiCV.exe     # Windows: native app, no Java needed
+open target/dist/GraphiCV.app         # macOS:   native app, no Java needed
+java -jar target/GraphiCV-1.0.jar     # any platform, needs a JDK
+```
 
 ---
 
@@ -56,9 +60,22 @@ If you'd rather hand someone an application that does not require Java at all, s
 mvn clean package
 ```
 
-This produces `target/GraphiCV-1.0.jar`, a runnable jar with the toolbar icons bundled
-inside it and `Main-Class` already set in the manifest. Run it with
-`java -jar target/GraphiCV-1.0.jar`, or on most desktops by double-clicking the jar.
+This produces two things:
+
+- `target/GraphiCV-1.0.jar` — a runnable jar with the toolbar icons bundled inside it and
+  `Main-Class` already set in the manifest. Run it with `java -jar target/GraphiCV-1.0.jar`,
+  or on most desktops by double-clicking it.
+- `target/dist/` — the **native application** for whichever platform you are on, described
+  in the next section.
+
+To build only the jar and skip the (slower, ~120 MB) native step:
+
+```sh
+mvn clean package -Djpackage.skip=true
+```
+
+In PowerShell, quote that flag — `"-Djpackage.skip=true"` — or PowerShell splits it into
+two arguments and Maven rejects it.
 
 There is no test suite and there are no third-party dependencies — GraphiCV is pure Java
 Swing.
@@ -67,16 +84,21 @@ Swing.
 
 ## Building a native application
 
-The `packaging/` scripts wrap [`jpackage`](https://docs.oracle.com/en/java/javase/17/jpackage/)
+`mvn package` builds the native application automatically, by delegating to the scripts in
+`packaging/`. Those scripts wrap [`jpackage`](https://docs.oracle.com/en/java/javase/17/jpackage/)
 (shipped with every JDK 14+) to produce a **self-contained application with a trimmed
 Java runtime baked in**. Users of the result do not need Java installed.
 
-`jpackage` can only build for the platform it runs on: build the Windows app on Windows
-and the macOS app on macOS.
+`jpackage` can only build for the platform it runs on, so Maven picks the right script by
+OS: build the Windows app on Windows and the macOS app on macOS.
+
+You only need to run the scripts directly for the options below — installers, mainly.
+Run that way, each script builds the jar first, so it works as a one-step entry point too.
 
 ### Windows
 
 ```powershell
+mvn clean package                     # or, equivalently:
 .\packaging\package-windows.ps1
 ```
 
@@ -95,10 +117,13 @@ Installers add Start Menu and desktop shortcut options and let the user choose a
 directory. Note that **installer creation requires the [WiX Toolset v3](https://github.com/wixtoolset/wix3/releases)
 on your PATH**; the plain app-image build above needs nothing but a JDK.
 
+Close any running copy of GraphiCV before rebuilding — Windows locks the files of a
+running executable, and `mvn clean` will fail to delete `target\dist`.
+
 ### macOS
 
 ```sh
-chmod +x packaging/package-mac.sh    # first time only
+mvn clean package                    # or, equivalently:
 ./packaging/package-mac.sh
 ```
 
@@ -310,7 +335,8 @@ right-hand quadrants automatically ticks **Enable different colors** for you.
 
 ```
 GraphiCV/
-├── pom.xml                        Maven build; bundles resource/ into the jar
+├── pom.xml                        Maven build; bundles resource/ into the jar and
+│                                  runs the matching packaging script for your OS
 ├── packaging/
 │   ├── package-windows.ps1        jpackage wrapper -> .exe / installer
 │   └── package-mac.sh             jpackage wrapper -> .app / .dmg / .pkg

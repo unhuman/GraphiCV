@@ -17,6 +17,11 @@
 .PARAMETER Type
     Installer type when -Installer is given: exe (default) or msi.
 
+.PARAMETER SkipBuild
+    Skip the Maven build and package whatever jar is already in target/. This is how
+    Maven itself invokes this script during the package phase, where the jar has just
+    been built.
+
 .EXAMPLE
     .\packaging\package-windows.ps1
     .\packaging\package-windows.ps1 -Installer -Type msi
@@ -25,7 +30,8 @@
 param(
     [switch]$Installer,
     [ValidateSet('exe', 'msi')]
-    [string]$Type = 'exe'
+    [string]$Type = 'exe',
+    [switch]$SkipBuild
 )
 
 $ErrorActionPreference = 'Stop'
@@ -40,9 +46,20 @@ $stageDir = Join-Path $projectRoot 'target\jpackage-input'
 $distDir  = Join-Path $projectRoot 'target\dist'
 
 # --- 1. Build the runnable jar -------------------------------------------------
-Write-Host "==> Building $jarName with Maven..." -ForegroundColor Cyan
-& mvn -f (Join-Path $projectRoot 'pom.xml') -q clean package
-if ($LASTEXITCODE -ne 0) { throw "Maven build failed (exit $LASTEXITCODE)." }
+# -Djpackage.skip=true stops Maven from calling this script back (see pom.xml).
+if (-not $SkipBuild) {
+    Write-Host "==> Building $jarName with Maven..." -ForegroundColor Cyan
+    # Quote the -D flag: PowerShell otherwise splits it into two arguments.
+    # Maven writes warnings to stderr, which PowerShell turns into terminating errors
+    # when this script's output is piped or redirected, so relax the preference here
+    # and gate on the exit code instead.
+    $priorPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    & mvn -f (Join-Path $projectRoot 'pom.xml') -q '-Djpackage.skip=true' clean package
+    $mvnExit = $LASTEXITCODE
+    $ErrorActionPreference = $priorPreference
+    if ($mvnExit -ne 0) { throw "Maven build failed (exit $mvnExit)." }
+}
 
 $jarPath = Join-Path $projectRoot "target\$jarName"
 if (-not (Test-Path $jarPath)) { throw "Expected jar not found: $jarPath" }
@@ -91,6 +108,12 @@ if (Test-Path $iconPath) { $jpackageArgs += @('--icon', $iconPath) }
 
 & $jpackage @jpackageArgs
 if ($LASTEXITCODE -ne 0) { throw "jpackage failed (exit $LASTEXITCODE)." }
+
+# jpackage marks the launcher and runtime files read-only, which makes a later
+# `mvn clean` fail to delete target\dist. Clear the attribute.
+Get-ChildItem -Recurse -File $distDir -Force |
+    Where-Object { $_.IsReadOnly } |
+    ForEach-Object { $_.IsReadOnly = $false }
 
 Write-Host ""
 Write-Host "Done. Output in: $distDir" -ForegroundColor Green

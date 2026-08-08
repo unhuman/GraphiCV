@@ -16,6 +16,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
         <main.class>com.unhuman.graphicv.GraphiCV</main.class>
+        <!-- Set to true to build only the jar and skip the native app image.
+             The packaging scripts set this when they call Maven, so that Maven
+             does not invoke them right back. -->
+        <jpackage.skip>false</jpackage.skip>
+        <exec.plugin.version>3.5.0</exec.plugin.version>
     </properties>
 
     <build>
@@ -51,4 +56,78 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- `mvn package` builds the jar and then the native application for whichever
+         platform you are on, by delegating to the scripts in packaging/. jpackage can
+         only target its host platform, so the Windows .exe must be built on Windows and
+         the macOS .app on macOS.
+
+         Skip the native step with:  mvn package -Djpackage.skip=true          -->
+    <profiles>
+        <profile>
+            <id>native-windows</id>
+            <activation>
+                <os><family>windows</family></os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <phase>package</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <skip>${jpackage.skip}</skip>
+                                    <executable>powershell</executable>
+                                    <arguments>
+                                        <argument>-NoProfile</argument>
+                                        <argument>-ExecutionPolicy</argument>
+                                        <argument>Bypass</argument>
+                                        <argument>-File</argument>
+                                        <argument>${project.basedir}/packaging/package-windows.ps1</argument>
+                                        <argument>-SkipBuild</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>native-mac</id>
+            <activation>
+                <os><family>mac</family></os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <phase>package</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <skip>${jpackage.skip}</skip>
+                                    <executable>bash</executable>
+                                    <arguments>
+                                        <argument>${project.basedir}/packaging/package-mac.sh</argument>
+                                        <argument>--skip-build</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
