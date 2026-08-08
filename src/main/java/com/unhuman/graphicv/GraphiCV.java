@@ -364,8 +364,12 @@ public class GraphiCV extends JPanel implements ActionListener, ItemListener, Ke
 		return textManager;
 	}
 
+	// Icons ship inside the jar (see the <resources> block in pom.xml), but fall back to
+	// the working directory so the app still runs straight out of an IDE / exploded tree.
 	private ImageIcon getImageIcon(String imagePath) {
-		URL resource = getClass().getResource(imagePath);
+		URL resource = getClass().getResource("/" + imagePath);
+		if (resource == null)
+			resource = getClass().getResource(imagePath);
 		if (resource != null) {
 			return new ImageIcon(resource);
 		} else

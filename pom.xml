@@ -9,15 +9,42 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
+    <name>GraphiCV</name>
+    <description>Graphics / Sprite Editor for ColecoVision and TI-99/4A</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <main.class>com.unhuman.graphicv.GraphiCV</main.class>
+    </properties>
+
     <build>
+        <resources>
+            <!-- Toolbar icons live outside src/main/resources; bundle them into the jar
+                 so the packaged app finds them on the classpath. -->
+            <resource>
+                <directory>resource</directory>
+                <targetPath>resource</targetPath>
+                <excludes>
+                    <exclude>**/Thumbs.db</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.unhuman.graphicv.GraphiCV</mainClass>
+                            <mainClass>${main.class}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
