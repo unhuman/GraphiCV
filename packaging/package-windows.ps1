@@ -38,7 +38,7 @@ $ErrorActionPreference = 'Stop'
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $appName     = 'GraphiCV'
-$appVersion  = '1.0'
+$appVersion  = '1.1'
 $mainClass   = 'com.unhuman.graphicv.GraphiCV'
 $jarName     = "$appName-$appVersion.jar"
 

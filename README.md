@@ -42,7 +42,7 @@ That gives you two ways to run it:
 ```sh
 target/dist/GraphiCV/GraphiCV.exe     # Windows: native app, no Java needed
 open target/dist/GraphiCV.app         # macOS:   native app, no Java needed
-java -jar target/GraphiCV-1.0.jar     # any platform, needs a JDK
+java -jar target/GraphiCV-1.1.jar     # any platform, needs a JDK
 ```
 
 ---
@@ -62,8 +62,8 @@ mvn clean package
 
 This produces two things:
 
-- `target/GraphiCV-1.0.jar` — a runnable jar with the toolbar icons bundled inside it and
-  `Main-Class` already set in the manifest. Run it with `java -jar target/GraphiCV-1.0.jar`,
+- `target/GraphiCV-1.1.jar` — a runnable jar with the toolbar icons bundled inside it and
+  `Main-Class` already set in the manifest. Run it with `java -jar target/GraphiCV-1.1.jar`,
   or on most desktops by double-clicking it.
 - `target/dist/` — the **native application** for whichever platform you are on, described
   in the next section.

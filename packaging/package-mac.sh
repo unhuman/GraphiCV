@@ -24,7 +24,7 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_NAME="GraphiCV"
-APP_VERSION="1.0"
+APP_VERSION="1.1"
 MAIN_CLASS="com.unhuman.graphicv.GraphiCV"
 JAR_NAME="${APP_NAME}-${APP_VERSION}.jar"
 
